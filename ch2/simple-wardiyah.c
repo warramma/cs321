@@ -18,7 +18,7 @@
 static int simple_init(void)
 {
        printk(KERN_INFO "Loading Module\n");
-	printk(KERN_INFO "Current jiffies: %lu", jiffies);
+	printk(KERN_INFO "Current jiffies: %lu\n", jiffies);
        return 0;
 }
 
