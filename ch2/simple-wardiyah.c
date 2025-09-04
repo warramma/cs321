@@ -29,7 +29,9 @@ static int simple_init(void)
 
 /* This function is called when the module is removed. */
 static void simple_exit(void) {
-	printk(KERN_INFO "GCD of 3,300 and 24 %lu:\n", gcd(3300,24));	
+	printk(KERN_INFO "GCD of 3,300 and 24: %lu\n", gcd(3300,24));	
+	printk(KERN_INFO "Elapsed time in seconds:  %lu\n ", (jiffies - start_jiffies)/HZ);
+
 	printk(KERN_INFO "Removing Module\n");
 }
 
