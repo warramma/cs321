@@ -33,7 +33,7 @@ static struct proc_ops  proc_ops = {
        .proc_read = proc_read,
 };
 
-
+static int completed = 0;
 /* This function is called when the module is loaded. */
 static int proc_init(void)
 {
@@ -72,11 +72,12 @@ static void proc_exit(void) {
  * count:
  * pos:
  */
+// static int completed = 0;
 static ssize_t proc_read(struct file *file, char __user *usr_buf, size_t count, loff_t *pos)
 {
         int rv = 0;
         char buffer[BUFFER_SIZE];
-        static int completed = 0;
+   //     static int completed = 0;
 
         if (completed) {
                 completed = 0;
