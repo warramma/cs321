@@ -1,5 +1,5 @@
 /**
- * hello1.c
+ * seconds.c
  *
  * Kernel module that communicates with /proc file system.
  * 
@@ -16,11 +16,11 @@
 #include <linux/proc_fs.h>
 #include <asm/uaccess.h>
 #include <linux/jiffies.h>
-#include <asm/param.h>
+#include <asm/uaccess.h>
 
 #define BUFFER_SIZE 128
 
-#define PROC_NAME "jiffies"
+#define PROC_NAME "seconds"
 #define MESSAGE "Hello World\n"
 
 /**
@@ -33,6 +33,7 @@ static struct proc_ops  proc_ops = {
        .proc_read = proc_read,
 };
 
+long int start_jiffies;
 /* This function is called when the module is loaded. */
 static int proc_init(void)
 {
@@ -43,7 +44,7 @@ static int proc_init(void)
         proc_create(PROC_NAME, 0, NULL, &proc_ops);
 
         printk(KERN_INFO "/proc/%s created\n", PROC_NAME);
-
+	start_jiffies = jiffies;
 	return 0;
 }
 
@@ -71,22 +72,21 @@ static void proc_exit(void) {
  * count:
  * pos:
  */
-
 static ssize_t proc_read(struct file *file, char __user *usr_buf, size_t count, loff_t *pos)
 {
         int rv = 0;
         char buffer[BUFFER_SIZE];
-   	 static int completed = 0;
+        static int completed = 0;
 
         if (completed) {
                 completed = 0;
                 return 0;
         }
 
-       completed = 1;
+        completed = 1;
 
-       // rv = sprintf(buffer, "Hello World\n");
-	rv = sprintf(buffer, "Current jiffies is %lu\n", jiffies);
+        rv = sprintf(buffer, "Elapsed Time (seconds): %lu \n", (jiffies - start_jiffies)/HZ);
+
         // copies the contents of buffer to userspace usr_buf
         raw_copy_to_user(usr_buf, buffer, rv);
 
